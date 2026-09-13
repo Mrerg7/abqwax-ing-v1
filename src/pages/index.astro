@@ -6,7 +6,7 @@ import Footer from '../components/Footer.astro';
 const STREAM_ID = '1ea6351125a7e09abc7bde760fbc0b5a';
 const STREAM_CUSTOMER = 'https://customer-wa9cpywo3l4jte5c.cloudflarestream.com';
 const STREAM_POSTER = `${STREAM_CUSTOMER}/${STREAM_ID}/thumbnails/thumbnail.jpg?time=&height=720`;
-const STREAM_SRC = `${STREAM_CUSTOMER}/${STREAM_ID}/iframe?muted=true&loop=true&autoplay=true&controls=false&poster=${encodeURIComponent(STREAM_POSTER)}`;
+const STREAM_HLS = `${STREAM_CUSTOMER}/${STREAM_ID}/manifest/video.m3u8`;
 ---
 
 <Layout>
@@ -14,44 +14,79 @@ const STREAM_SRC = `${STREAM_CUSTOMER}/${STREAM_ID}/iframe?muted=true&loop=true&
 
   <main class="flex-1">
     <section class="hero relative isolate overflow-hidden bg-ink-950" aria-label="ABQWax.ing streaming hero">
-      <div class="hero-media absolute inset-0" aria-hidden="true">
-        <img
-          class="hero-poster absolute inset-0 h-full w-full object-cover"
-          src={STREAM_POSTER}
-          alt=""
-          width="1280"
-          height="720"
-          decoding="async"
-        />
-        <div class="hero-stream-frame">
-          <iframe
-            src={STREAM_SRC}
-            title="ABQWax.ing hero video"
-            loading="eager"
-            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-            allowfullscreen="true"
-          ></iframe>
+      <div class="relative sm:min-h-[min(78vh,760px)]">
+        <div class="hero-media relative aspect-[5/6] overflow-hidden sm:absolute sm:inset-0 sm:aspect-auto" aria-hidden="true">
+          <video
+            id="hero-stream"
+            class="hero-video absolute inset-0 h-full w-full object-cover"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            poster={STREAM_POSTER}
+            data-hls={STREAM_HLS}
+          >
+            <source src={STREAM_HLS} type="application/x-mpegURL" />
+          </video>
+          <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/70 via-transparent to-ink-950/10 sm:from-ink-950 sm:from-10% sm:via-ink-950/45 sm:via-40% sm:to-transparent sm:to-70%"></div>
         </div>
-      </div>
-      <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/40 to-ink-950/15 sm:via-ink-950/55 sm:to-ink-950/20"></div>
-      <div class="relative z-10 flex min-h-[calc(100svh-3.5rem)] items-end pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:min-h-[min(78vh,760px)]">
-        <div class="container-narrow w-full pb-8 pt-24 sm:pb-12 sm:pt-28">
-          <p class="mb-3 text-[10px] font-medium uppercase tracking-widestx text-gold-300 sm:text-xs">
-            Albuquerque · Waxing · Premium Domain
-          </p>
-          <h1 class="font-display text-4xl font-semibold leading-[0.95] text-white sm:text-6xl lg:text-7xl">
-            ABQWax<span class="italic text-gold-300">.ing</span>
-          </h1>
-          <p class="mt-4 max-w-xl text-sm leading-relaxed text-ink-100/90 sm:mt-5 sm:text-lg">
-            The city. The service. The verb. Read it once and it becomes Albuquerque waxing.
-          </p>
-          <div class="mt-6 flex flex-col gap-2 sm:mt-8 sm:flex-row sm:gap-3">
-            <a href="#value" class="btn-primary">Why it is rare</a>
-            <a href="#acquisition" class="btn-secondary">$250,000</a>
+
+        <div class="relative z-10 flex items-end sm:absolute sm:inset-0">
+          <div class="container-narrow w-full pb-8 pt-6 sm:pb-12 sm:pt-28">
+            <p class="mb-2 text-[10px] font-medium uppercase tracking-widestx text-gold-300 sm:mb-3 sm:text-xs">
+              Albuquerque · Waxing · Premium Domain
+            </p>
+            <h1 class="font-display text-[2.75rem] font-semibold leading-[0.95] text-white sm:text-6xl lg:text-7xl">
+              ABQWax<span class="italic text-gold-300">.ing</span>
+            </h1>
+            <p class="mt-3 max-w-xl text-sm leading-relaxed text-ink-100/90 sm:mt-5 sm:text-lg">
+              The city. The service. The verb. Read it once and it becomes Albuquerque waxing.
+            </p>
+            <div class="mt-5 flex flex-col gap-2 sm:mt-8 sm:flex-row sm:gap-3">
+              <a href="#value" class="btn-primary">Why it is rare</a>
+              <a href="#acquisition" class="btn-secondary">$250,000</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
+
+    <script>
+      const video = document.getElementById('hero-stream');
+      if (video instanceof HTMLVideoElement) {
+        const src = video.dataset.hls;
+        const tryPlay = () => {
+          video.muted = true;
+          video.play().catch(() => {});
+        };
+
+        if (src && video.canPlayType('application/vnd.apple.mpegurl')) {
+          tryPlay();
+        } else if (src) {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js';
+          script.async = true;
+          script.onload = () => {
+            // @ts-ignore
+            const HlsLib = window.Hls;
+            if (HlsLib?.isSupported()) {
+              const hls = new HlsLib({ enableWorker: true, lowLatencyMode: false });
+              hls.loadSource(src);
+              hls.attachMedia(video);
+              hls.on(HlsLib.Events.MANIFEST_PARSED, tryPlay);
+            } else {
+              tryPlay();
+            }
+          };
+          document.head.appendChild(script);
+        }
+
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) tryPlay();
+        });
+      }
+    </script>
 
     <section id="name" class="section-padding bg-ink-50">
       <div class="container-narrow max-w-3xl">
