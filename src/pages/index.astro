@@ -11,32 +11,32 @@ const STREAM_SRC =
   <Header />
 
   <main class="flex-1">
-    <section class="relative bg-ink-950">
-      <div class="relative w-full" style="padding-top: 54.32098765432099%;">
+    <section class="hero relative isolate overflow-hidden bg-ink-950" aria-label="ABQWax.ing streaming hero">
+      <div class="hero-media absolute inset-0" aria-hidden="true">
         <iframe
+          class="hero-stream"
           src={STREAM_SRC}
           title="ABQWax.ing hero video"
-          loading="lazy"
-          style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"
+          loading="eager"
           allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
           allowfullscreen="true"
         ></iframe>
-        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/55 to-ink-950/20"></div>
-        <div class="absolute inset-0 flex items-end">
-          <div class="container-narrow w-full pb-6 pt-16 sm:pb-12 sm:pt-20">
-            <p class="mb-3 text-[10px] font-medium uppercase tracking-widestx text-gold-300 sm:text-xs">
-              Albuquerque · Waxing · Premium Domain
-            </p>
-            <h1 class="font-display text-4xl font-semibold leading-[0.95] text-white sm:text-6xl lg:text-7xl">
-              ABQWax<span class="italic text-gold-300">.ing</span>
-            </h1>
-            <p class="mt-4 max-w-xl text-sm leading-relaxed text-ink-100/90 sm:mt-5 sm:text-lg">
-              The city. The service. The verb. Read it once and it becomes Albuquerque waxing.
-            </p>
-            <div class="mt-6 flex flex-col gap-2 sm:mt-8 sm:flex-row sm:gap-3">
-              <a href="#value" class="btn-primary pointer-events-auto">Why it is rare</a>
-              <a href="#acquisition" class="btn-secondary pointer-events-auto">$250,000</a>
-            </div>
+      </div>
+      <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/35 to-ink-950/10 sm:via-ink-950/50 sm:to-ink-950/20"></div>
+      <div class="relative z-10 flex min-h-[calc(100svh-3.5rem)] items-end sm:min-h-[min(78vh,760px)]">
+        <div class="container-narrow w-full pb-8 pt-24 sm:pb-12 sm:pt-28">
+          <p class="mb-3 text-[10px] font-medium uppercase tracking-widestx text-gold-300 sm:text-xs">
+            Albuquerque · Waxing · Premium Domain
+          </p>
+          <h1 class="font-display text-4xl font-semibold leading-[0.95] text-white sm:text-6xl lg:text-7xl">
+            ABQWax<span class="italic text-gold-300">.ing</span>
+          </h1>
+          <p class="mt-4 max-w-xl text-sm leading-relaxed text-ink-100/90 sm:mt-5 sm:text-lg">
+            The city. The service. The verb. Read it once and it becomes Albuquerque waxing.
+          </p>
+          <div class="mt-6 flex flex-col gap-2 sm:mt-8 sm:flex-row sm:gap-3">
+            <a href="#value" class="btn-primary">Why it is rare</a>
+            <a href="#acquisition" class="btn-secondary">$250,000</a>
           </div>
         </div>
       </div>
