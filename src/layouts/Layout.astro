@@ -1,0 +1,123 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  canonical?: string;
+}
+
+const POSTER =
+  'https://customer-wa9cpywo3l4jte5c.cloudflarestream.com/1ea6351125a7e09abc7bde760fbc0b5a/thumbnails/thumbnail.jpg?time=&height=600';
+
+const {
+  title = 'ABQWax.ing | Albuquerque Waxing Domain — $250,000',
+  description = 'ABQWax.ing is Albuquerque waxing written into a domain. City, category, and the .ing verb in one premium name. Offered at $250,000.',
+  ogImage = POSTER,
+  canonical = 'https://abqwax.ing/',
+} = Astro.props;
+
+const siteName = 'ABQWax.ing';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="ABQ waxing, Albuquerque waxing, Brazilian wax Albuquerque, ABQWax.ing, premium domain, .ing domain" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href={canonical} />
+    <meta name="google-site-verification" content="nicymcsC10COKPxfDAHMwSICUP3uqwHYiNzdANcffug" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0d0b0a" />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": siteName,
+      "url": "https://abqwax.ing",
+      "description": description
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": title,
+      "description": description,
+      "url": canonical,
+      "primaryImageOfPage": { "@type": "ImageObject", "url": ogImage },
+      "datePublished": "2026-09-13",
+      "dateModified": "2026-09-13",
+      "inLanguage": "en-US"
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "ABQWax.ing",
+      "description": "Premium domain name pairing Albuquerque with the waxing category via the .ing TLD.",
+      "url": "https://abqwax.ing",
+      "brand": { "@type": "Brand", "name": "ABQWax.ing" },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://abqwax.ing/#acquisition",
+        "price": "250000",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@type": "Organization", "name": "Desert Rich", "email": "sales@desertrich.com" }
+      }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does ABQWax.ing mean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Read aloud, ABQWax.ing becomes ABQ waxing. The .ing TLD completes the service verb so the hostname is the category."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the asking price?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ABQWax.ing is offered at $250,000 USD. Serious inquiries to sales@desertrich.com."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does waxing last?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Wax epilation extracts hair from the root and typically provides smooth skin for 3 to 4 weeks."
+          }
+        }
+      ]
+    })} />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <slot />
+  </body>
+</html>
