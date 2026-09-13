@@ -5,8 +5,8 @@
 @tailwind utilities;
 
 @layer base {
-  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-  body { @apply bg-ink-50 text-ink-950 font-sans antialiased; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+  body { @apply bg-ink-50 text-ink-950 font-sans antialiased overflow-x-clip; }
   ::selection { @apply bg-gold-300 text-ink-950; }
 }
 
@@ -21,20 +21,36 @@
   }
   .card { @apply rounded-3xl border border-ink-100 bg-white/80 p-6 shadow-sm backdrop-blur sm:p-7; }
 
-  /* Cloudflare Stream iframe sized to cover the hero (video AR ≈ 1.841:1) */
+  /*
+   * Keep the Stream iframe at the video aspect ratio (≈1.841:1) so the
+   * player initializes correctly, then scale that frame to cover the hero.
+   */
   .hero-media {
     overflow: hidden;
+    container-type: size;
   }
-  .hero-stream {
-    border: none;
+  .hero-stream-frame {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 100vw;
-    height: 54.32vw;
-    min-height: 100%;
-    min-width: 184.09vh;
+    aspect-ratio: 1.840909 / 1;
+    width: max(100%, calc(100cqh * 1.840909));
+    height: max(100%, calc(100cqw / 1.840909));
     transform: translate(-50%, -50%);
     pointer-events: none;
+  }
+  .hero-stream-frame iframe {
+    border: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  @supports not (width: 1cqw) {
+    .hero-stream-frame {
+      width: max(100%, 184.09vh);
+      height: auto;
+      min-height: 100%;
+    }
   }
 }
