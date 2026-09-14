@@ -76,14 +76,49 @@ const siteName = 'ABQWax.ing';
       "name": "ABQWax.ing",
       "description": "Premium domain name pairing Albuquerque with the waxing category via the .ing TLD.",
       "url": "https://abqwax.ing",
+      "image": [ogImage],
       "brand": { "@type": "Brand", "name": "ABQWax.ing" },
       "offers": {
         "@type": "Offer",
         "url": "https://abqwax.ing/#acquisition",
         "price": "250000",
         "priceCurrency": "USD",
+        "priceValidUntil": "2027-12-31",
         "availability": "https://schema.org/InStock",
-        "seller": { "@type": "Organization", "name": "Desert Rich", "email": "sales@desertrich.com" }
+        "itemCondition": "https://schema.org/NewCondition",
+        "seller": { "@type": "Organization", "name": "Desert Rich", "email": "sales@desertrich.com" },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "US",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
+        },
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": 0,
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "US"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 2,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 3,
+              "unitCode": "DAY"
+            }
+          }
+        }
       }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
