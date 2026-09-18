@@ -1,12 +1,32 @@
 ---
 import '../styles/global.css';
 
+interface Breadcrumb {
+  name: string;
+  path: string;
+}
+
+interface ArticleMeta {
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+}
+
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
   canonical?: string;
+  ogType?: 'website' | 'article';
+  keywords?: string;
+  breadcrumbs?: Breadcrumb[];
+  article?: ArticleMeta;
 }
+
+const SITE_URL = 'https://abqwax.ing';
+const SITE_NAME = 'ABQWax.ing';
+const ORG_NAME = 'Desert Rich';
+const CONTACT_EMAIL = 'sales@desertrich.com';
 
 const POSTER =
   'https://customer-wa9cpywo3l4jte5c.cloudflarestream.com/1ea6351125a7e09abc7bde760fbc0b5a/thumbnails/thumbnail.jpg?time=&height=600';
@@ -15,10 +35,45 @@ const {
   title = 'ABQWax.ing | Albuquerque Waxing Domain — $250,000',
   description = 'ABQWax.ing is Albuquerque waxing written into a domain. City, category, and the .ing verb in one premium name. Offered at $250,000.',
   ogImage = POSTER,
-  canonical = 'https://abqwax.ing/',
+  canonical = `${SITE_URL}/`,
+  ogType = 'website',
+  keywords = 'ABQ waxing, Albuquerque waxing, Brazilian wax Albuquerque, ABQWax.ing, premium domain, .ing domain',
+  breadcrumbs = [],
+  article,
 } = Astro.props;
 
-const siteName = 'ABQWax.ing';
+const canonicalUrl = canonical.startsWith('http') ? canonical : `${SITE_URL}${canonical}`;
+const today = new Date().toISOString().split('T')[0];
+
+const breadcrumbList = breadcrumbs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((crumb, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: crumb.name,
+        item: crumb.path.startsWith('http') ? crumb.path : `${SITE_URL}${crumb.path}`,
+      })),
+    }
+  : null;
+
+const articleSchema =
+  ogType === 'article'
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: title,
+        description,
+        image: ogImage,
+        datePublished: article?.publishedTime,
+        dateModified: article?.modifiedTime ?? article?.publishedTime,
+        author: { '@type': 'Organization', name: ORG_NAME, url: SITE_URL },
+        publisher: { '@type': 'Organization', name: ORG_NAME, url: SITE_URL },
+        mainEntityOfPage: canonicalUrl,
+        keywords: keywords.split(',').map((k) => k.trim()),
+      }
+    : null;
 ---
 
 <!doctype html>
@@ -29,19 +84,22 @@ const siteName = 'ABQWax.ing';
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="ABQ waxing, Albuquerque waxing, Brazilian wax Albuquerque, ABQWax.ing, premium domain, .ing domain" />
+    <meta name="keywords" content={keywords} />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <link rel="canonical" href={canonical} />
+    <link rel="canonical" href={canonicalUrl} />
     <meta name="google-site-verification" content="nicymcsC10COKPxfDAHMwSICUP3uqwHYiNzdANcffug" />
+    <meta name="author" content={ORG_NAME} />
+    <link rel="alternate" hreflang="en" href={canonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
 
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content={siteName} />
+    <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:locale" content="en_US" />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -52,11 +110,30 @@ const siteName = 'ABQWax.ing';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#0d0b0a" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://customer-wa9cpywo3l4jte5c.cloudflarestream.com" />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": ORG_NAME,
+      "url": SITE_URL,
+      "logo": `${SITE_URL}/favicon.svg`,
+      "email": CONTACT_EMAIL,
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": CONTACT_EMAIL,
+        "contactType": "sales",
+        "availableLanguage": "English"
+      }
+    })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": siteName,
-      "url": "https://abqwax.ing",
+      "name": SITE_NAME,
+      "url": SITE_URL,
       "description": description
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -64,10 +141,10 @@ const siteName = 'ABQWax.ing';
       "@type": "WebPage",
       "name": title,
       "description": description,
-      "url": canonical,
+      "url": canonicalUrl,
       "primaryImageOfPage": { "@type": "ImageObject", "url": ogImage },
       "datePublished": "2026-09-13",
-      "dateModified": "2026-09-13",
+      "dateModified": today,
       "inLanguage": "en-US"
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -86,7 +163,7 @@ const siteName = 'ABQWax.ing';
         "priceValidUntil": "2027-12-31",
         "availability": "https://schema.org/InStock",
         "itemCondition": "https://schema.org/NewCondition",
-        "seller": { "@type": "Organization", "name": "Desert Rich", "email": "sales@desertrich.com" },
+        "seller": { "@type": "Organization", "name": ORG_NAME, "email": CONTACT_EMAIL },
         "hasMerchantReturnPolicy": {
           "@type": "MerchantReturnPolicy",
           "applicableCountry": "US",
@@ -151,6 +228,12 @@ const siteName = 'ABQWax.ing';
         }
       ]
     })} />
+    {breadcrumbList && (
+      <script type="application/ld+json" set:html={JSON.stringify(breadcrumbList)} />
+    )}
+    {articleSchema && (
+      <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    )}
   </head>
   <body class="min-h-screen flex flex-col">
     <slot />

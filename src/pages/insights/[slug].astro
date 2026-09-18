@@ -1,0 +1,73 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const insights = await getCollection('insights', ({ data }) => !data.draft);
+  return insights.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const pub = post.data.pubDate.toISOString().split('T')[0];
+---
+
+<Layout
+  title={`${post.data.title} — ABQWax.ing`}
+  description={post.data.description}
+  canonical={`/insights/${post.slug}/`}
+  ogType="article"
+  keywords={[...post.data.tags, 'ABQWax.ing', 'Albuquerque waxing'].join(', ')}
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Insights', path: '/insights/' },
+    { name: post.data.title, path: `/insights/${post.slug}/` },
+  ]}
+  article={{
+    publishedTime: pub,
+    modifiedTime: pub,
+    tags: post.data.tags,
+  }}
+>
+  <Header />
+
+  <main class="flex-1">
+    <article class="bg-white">
+      <header class="border-b border-ink-100 bg-ink-950">
+        <div class="container-narrow max-w-3xl py-16 sm:py-20">
+          <p class="text-[11px] font-medium uppercase tracking-widestx text-gold-400">{pub}</p>
+          <h1 class="mt-3 font-display text-4xl font-semibold leading-tight text-white sm:text-5xl">
+            {post.data.title}
+          </h1>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {post.data.tags.map((tag) => (
+              <span class="rounded-full border border-white/15 px-3 py-1 text-xs text-ink-100/70">{tag}</span>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      <div class="section-padding">
+        <div class="container-narrow max-w-3xl">
+          <div class="prose prose-lg prose-neutral max-w-none">
+            <Content />
+          </div>
+
+          <aside class="mt-12 rounded-3xl border border-ink-100 bg-ink-50 p-6 sm:p-8">
+            <p class="text-[11px] font-medium uppercase tracking-widestx text-gold-500">The domain behind the insight</p>
+            <p class="mt-3 font-display text-2xl font-semibold text-ink-950">ABQWax.ing</p>
+            <p class="mt-2 text-sm text-ink-700">City, category, and the service verb in one hostname. Offered at $250,000.</p>
+            <a href="/#acquisition" class="btn-primary mt-4">Request terms</a>
+          </aside>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>

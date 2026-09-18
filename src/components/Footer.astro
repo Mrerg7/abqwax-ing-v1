@@ -28,17 +28,25 @@ const currentYear = new Date().getFullYear();
   </div>
 
   <div class="container-narrow py-8">
-    <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+    <div class="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <p class="font-display text-lg text-white">ABQWax.ing</p>
         <p class="text-xs uppercase tracking-widestx text-ink-100/50">Informational platform</p>
       </div>
-      <p class="max-w-md text-xs leading-relaxed text-ink-100/50 sm:text-right">
-        This website is for demonstration and informational purposes only. It does not constitute an offer of salon services,
-        a commitment to deploy, or a guarantee of outcomes. All statistics, projections, and references to specific
-        technologies are based on publicly available information as of the date shown and are subject to change.
-      </p>
+      <nav class="grid grid-cols-2 gap-x-10 gap-y-2 text-sm sm:grid-cols-3" aria-label="Footer navigation">
+        <a href="/albuquerque-waxing/" class="text-ink-100/70 hover:text-gold-300">Albuquerque Waxing</a>
+        <a href="/brazilian-wax-albuquerque/" class="text-ink-100/70 hover:text-gold-300">Brazilian Wax Albuquerque</a>
+        <a href="/abq-waxing/" class="text-ink-100/70 hover:text-gold-300">ABQ Waxing</a>
+        <a href="/hard-wax-albuquerque/" class="text-ink-100/70 hover:text-gold-300">Hard Wax Albuquerque</a>
+        <a href="/insights/" class="text-ink-100/70 hover:text-gold-300">Waxing Insights</a>
+        <a href="/#value" class="text-ink-100/70 hover:text-gold-300">Why It Is Rare</a>
+      </nav>
     </div>
+    <p class="mt-8 max-w-md text-xs leading-relaxed text-ink-100/50">
+      This website is for demonstration and informational purposes only. It does not constitute an offer of salon services,
+      a commitment to deploy, or a guarantee of outcomes. All statistics, projections, and references to specific
+      technologies are based on publicly available information as of the date shown and are subject to change.
+    </p>
     <div class="mt-8 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-ink-100/40 sm:flex-row sm:justify-between">
       <p>© {currentYear} ABQWax.ing. All rights reserved.</p>
       <p>Astro · Cloudflare Workers Static Assets · Stream</p>
