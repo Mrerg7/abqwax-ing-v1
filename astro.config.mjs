@@ -19,6 +19,8 @@ const changefreqFor = (url) => {
 export default defineConfig({
   site: 'https://abqwax.ing',
   output: 'static',
+  trailingSlash: 'always',
+  compressHTML: true,
   integrations: [
     tailwind({ applyBaseStyles: false }),
     sitemap({

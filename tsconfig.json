@@ -6,6 +6,6 @@
     "jsx": "preserve",
     "jsxImportSource": "astro"
   },
-  "include": ["src/**/*", "astro.config.mjs"],
+  "include": [".astro/types.d.ts", "src/**/*", "astro.config.mjs"],
   "exclude": ["dist", "node_modules"]
 }

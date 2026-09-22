@@ -58,22 +58,6 @@ const breadcrumbList = breadcrumbs.length
     }
   : null;
 
-const articleSchema =
-  ogType === 'article'
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: title,
-        description,
-        image: ogImage,
-        datePublished: article?.publishedTime,
-        dateModified: article?.modifiedTime ?? article?.publishedTime,
-        author: { '@type': 'Organization', name: ORG_NAME, url: SITE_URL },
-        publisher: { '@type': 'Organization', name: ORG_NAME, url: SITE_URL },
-        mainEntityOfPage: canonicalUrl,
-        keywords: keywords.split(',').map((k) => k.trim()),
-      }
-    : null;
 ---
 
 <!doctype html>
@@ -84,13 +68,12 @@ const articleSchema =
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content={keywords} />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href={canonicalUrl} />
     <meta name="google-site-verification" content="nicymcsC10COKPxfDAHMwSICUP3uqwHYiNzdANcffug" />
     <meta name="author" content={ORG_NAME} />
-    <link rel="alternate" hreflang="en" href={canonicalUrl} />
-    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+    <link rel="alternate" type="application/rss+xml" title="ABQWax.ing Insights" href={`${SITE_URL}/rss.xml`} />
+    <link rel="alternate" type="text/markdown" href={`${canonicalUrl.replace(/\/$/, '')}.md`} />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalUrl} />
@@ -118,10 +101,12 @@ const articleSchema =
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
       "name": ORG_NAME,
       "url": SITE_URL,
-      "logo": `${SITE_URL}/favicon.svg`,
+      "logo": { "@type": "ImageObject", "url": `${SITE_URL}/favicon.svg`, "width": 32, "height": 32 },
       "email": CONTACT_EMAIL,
+      "description": "Desert Rich offers premium domain names for acquisition.",
       "contactPoint": {
         "@type": "ContactPoint",
         "email": CONTACT_EMAIL,
@@ -132,20 +117,32 @@ const articleSchema =
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
       "name": SITE_NAME,
       "url": SITE_URL,
-      "description": description
+      "description": description,
+      "inLanguage": "en-US",
+      "publisher": { "@id": `${SITE_URL}/#organization` }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
-      "@type": "WebPage",
+      "@type": ogType === 'article' ? "BlogPosting" : "WebPage",
+      "@id": `${canonicalUrl}#webpage`,
       "name": title,
       "description": description,
       "url": canonicalUrl,
-      "primaryImageOfPage": { "@type": "ImageObject", "url": ogImage },
-      "datePublished": "2026-09-13",
-      "dateModified": today,
-      "inLanguage": "en-US"
+      "primaryImageOfPage": { "@type": "ImageObject", "url": ogImage, "width": 1200, "height": 630 },
+      "isPartOf": { "@id": `${SITE_URL}/#website` },
+      "datePublished": article?.publishedTime ?? "2026-09-13",
+      "dateModified": article?.modifiedTime ?? today,
+      "inLanguage": "en-US",
+      ...(ogType === 'article' ? {
+        "headline": title,
+        "author": { "@type": "Organization", "name": ORG_NAME, "url": SITE_URL },
+        "publisher": { "@id": `${SITE_URL}/#organization` },
+        "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrl },
+        "keywords": keywords.split(',').map((k) => k.trim())
+      } : {})
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -202,6 +199,7 @@ const articleSchema =
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "FAQPage",
+      "@id": `${canonicalUrl}#faq`,
       "mainEntity": [
         {
           "@type": "Question",
@@ -231,9 +229,6 @@ const articleSchema =
     })} />
     {breadcrumbList && (
       <script type="application/ld+json" set:html={JSON.stringify(breadcrumbList)} />
-    )}
-    {articleSchema && (
-      <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
     )}
   </head>
   <body class="min-h-screen flex flex-col">
