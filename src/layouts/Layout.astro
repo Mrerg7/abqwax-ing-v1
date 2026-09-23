@@ -19,6 +19,7 @@ interface Props {
   canonical?: string;
   ogType?: 'website' | 'article';
   keywords?: string;
+  robots?: string;
   breadcrumbs?: Breadcrumb[];
   article?: ArticleMeta;
 }
@@ -38,6 +39,7 @@ const {
   canonical = `${SITE_URL}/`,
   ogType = 'website',
   keywords = 'ABQ waxing, Albuquerque waxing, Brazilian wax Albuquerque, ABQWax.ing, premium domain, .ing domain',
+  robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
   breadcrumbs = [],
   article,
 } = Astro.props;
@@ -68,12 +70,11 @@ const breadcrumbList = breadcrumbs.length
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="robots" content={robots} />
     <link rel="canonical" href={canonicalUrl} />
     <meta name="google-site-verification" content="nicymcsC10COKPxfDAHMwSICUP3uqwHYiNzdANcffug" />
     <meta name="author" content={ORG_NAME} />
     <link rel="alternate" type="application/rss+xml" title="ABQWax.ing Insights" href={`${SITE_URL}/rss.xml`} />
-    <link rel="alternate" type="text/markdown" href={`${canonicalUrl.replace(/\/$/, '')}.md`} />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalUrl} />
